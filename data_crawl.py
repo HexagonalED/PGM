@@ -31,7 +31,7 @@ class dataAccess:
         self.unzip_KMA()
 
     def clear_KMA_csv(self):
-        os.system("rm %sKMA/SURFACE*.csv", self._dataPath)
+        os.system("rm %sKMA/SURFACE*.csv" % self._dataPath)
 
     def close(self):
         self._pvCrawl.close()
@@ -58,8 +58,6 @@ class dataAccess:
     def unzip_KMA(self):
         l = list(set(self._locMapKMA.values()))
         dirList = os.listdir("%sKMA/" % self._dataPath)
-        print(dirList)
-        print(l)
         for d in dirList:
             for i in l :
                 if str(i) == d[13:-22] :
@@ -140,7 +138,6 @@ class airCrawlerFile:
             return quarter
         if y!=2017 and y!=2019 :
             quarter=get_quarter(m)
-            print("quarter:%s" % quarter)
             if y==2013 :
                 csvName = "%s/%s년0%s분기.csv" % (y,y,quarter)
             elif y==2015 :
@@ -219,12 +216,26 @@ class kmaCrawlerFile:
 
 
 if __name__ == "__main__":
+    def save_as_csv(returnList):
+        with open("db.csv", 'w', newline='') as f:
+            wr = csv.writer(f, quoting=csv.QUOTE_ALL)
+            wr.writerow(returnList)
+
     dataSetPath=os.getcwd()+"/data/"
     access=dataAccess(dataSetPath)
-    retList = access.pick_data_all("10","SO2","PM10","PM25","기온","일조","일사")
-    for i in retList:
-        print(str(i))
-    access.clear_KMA_csv()
+    pvList = ["00","01","02","10","11","12","13","14","15","20"]
+    for x in pvList:
+        retList = access.pick_data("2013-01-01 01:00", "2018-12-31 23:00",x,
+                                   "PM10","PM25","SO2","CO","O3","NO2",
+                                   "기온","강수량","습도","풍속","풍향","증기압","이슬점온도","현지기압","해면기압","일조","일사","지면온도")
+        keys = retList[0].keys()
+        with open('%s_db.csv' % x, 'w',newline='') as output_file:
+            dict_writer = csv.DictWriter(output_file, keys)
+            dict_writer.writeheader()
+            dict_writer.writerows(retList)
+        for i in retList:
+            print(str(i))
+        access.clear_KMA_csv()
 
 
 
