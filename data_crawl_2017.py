@@ -149,7 +149,7 @@ class airCrawlerFile:
                 csvName = "%s년 %s분기.csv" % (y,quarter)
         else:
             csvName = "%s년 %s월.csv" % (y,m)
-        print("file : %s%s" % (self._path,csvName))
+
         self._f = open("%s%s" % (self._path,csvName),'r',encoding='utf-8')
         c = list(csv.reader(self._f))
         self.close()
@@ -196,7 +196,6 @@ class kmaCrawlerFile:
     def open_csv_file_as_list(self,y,stnId):
         yearNameMap={'2013':"2013_2013_2015",'2014':"2014_2014_2015",'2015':"2015_2015_2016",'2016':"2016_2016_2017",'2017':"2017_2017_2018",'2018':"2018_2018_2019"}
         csvName="SURFACE_ASOS_%s_HR_%s.csv" % (stnId,yearNameMap[str(y)])
-        print("file : %s%s" % (self._path,csvName))
         self._f = open(self._path+csvName,'r',encoding='euc-kr')
         c = list(csv.reader(self._f))
         self.close()
@@ -243,49 +242,6 @@ if __name__ == "__main__":
     pvList = ["00","01","02","10","11","12","13","14","15","20"]
     for x in pvList:
         print("accessing PV %s" % x)
-        print("writing year 2013")
-        retList = access.pick_data("2013-01-01 01:00", "2013-12-31 23:00",x,
-                                   "PM10","PM25","SO2","CO","O3","NO2",
-                                   "기온","강수량","습도","풍속","풍향","증기압","이슬점온도","현지기압","해면기압","일조","일사","지면온도")
-        keys = retList[0].keys()
-        with open('%s_db_2013.csv' % x, 'w',newline='') as output_file:
-            dict_writer = csv.DictWriter(output_file, keys)
-            dict_writer.writeheader()
-            dict_writer.writerows(retList)
-        print("year 2013 complete")
-
-        print("writing year 2014")
-        retList = access.pick_data("2014-01-01 01:00", "2014-12-31 23:00",x,
-                                   "PM10","PM25","SO2","CO","O3","NO2",
-                                   "기온","강수량","습도","풍속","풍향","증기압","이슬점온도","현지기압","해면기압","일조","일사","지면온도")
-        keys = retList[0].keys()
-        with open('%s_db_2014.csv' % x, 'w',newline='') as output_file:
-            dict_writer = csv.DictWriter(output_file, keys)
-            dict_writer.writeheader()
-            dict_writer.writerows(retList)
-        print("year 2014 complete")
-
-        print("writing year 2015")
-        retList = access.pick_data("2015-01-01 01:00", "2015-12-31 23:00",x,
-                                   "PM10","PM25","SO2","CO","O3","NO2",
-                                   "기온","강수량","습도","풍속","풍향","증기압","이슬점온도","현지기압","해면기압","일조","일사","지면온도")
-        keys = retList[0].keys()
-        with open('%s_db_2015.csv' % x, 'w',newline='') as output_file:
-            dict_writer = csv.DictWriter(output_file, keys)
-            dict_writer.writeheader()
-            dict_writer.writerows(retList)
-        print("year 2015 complete")
-        print("writing year 2016")
-        retList = access.pick_data("2016-01-01 01:00", "2016-12-31 23:00",x,
-                                   "PM10","PM25","SO2","CO","O3","NO2",
-                                   "기온","강수량","습도","풍속","풍향","증기압","이슬점온도","현지기압","해면기압","일조","일사","지면온도")
-        keys = retList[0].keys()
-        with open('%s_db_2016.csv' % x, 'w',newline='') as output_file:
-            dict_writer = csv.DictWriter(output_file, keys)
-            dict_writer.writeheader()
-            dict_writer.writerows(retList)
-        print("year 2016 complete")
-
         print("writing year 2017")
         retList = access.pick_data("2017-01-01 01:00", "2017-12-31 23:00",x,
                                    "PM10","PM25","SO2","CO","O3","NO2",
@@ -296,17 +252,6 @@ if __name__ == "__main__":
             dict_writer.writeheader()
             dict_writer.writerows(retList)
         print("year 2017 complete")
-
-        print("writing year 2018")
-        retList = access.pick_data("2018-01-01 01:00", "2018-12-31 23:00",x,
-                                   "PM10","PM25","SO2","CO","O3","NO2",
-                                   "기온","강수량","습도","풍속","풍향","증기압","이슬점온도","현지기압","해면기압","일조","일사","지면온도")
-        keys = retList[0].keys()
-        with open('%s_db_2018.csv' % x, 'w',newline='') as output_file:
-            dict_writer = csv.DictWriter(output_file, keys)
-            dict_writer.writeheader()
-            dict_writer.writerows(retList)
-        print("year 2018 complete")
     access.clear_KMA_csv()
 
 

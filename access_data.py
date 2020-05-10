@@ -49,5 +49,7 @@ class dbAccess:
 
 
 if __name__ == "__main__":
-    db = dbAccess("db.csv")
+    pvId = input("pvID : ")
+    year = input("year : ")
+    db = dbAccess("%s_db_%s.csv" % (pvId,year))
     print(db.get_data("2013-01-01 01:00", "2013-01-02 01:00", "PV","PM10","PM25","일사"))
