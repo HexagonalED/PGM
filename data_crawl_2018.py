@@ -61,7 +61,8 @@ class dataAccess:
         for d in dirList:
             for i in l :
                 if str(i) == d[13:-22] :
-                    os.system("unzip %sKMA/%s -d %s/KMA" % (self._dataPath,d,self._dataPath))
+                    if not os.path.exists("%sKMA/%scsv" % (self._dataPath,d[:-3])):
+                        os.system("unzip %sKMA/%s -d %s/KMA" % (self._dataPath,d,self._dataPath))
 
 
 
@@ -176,7 +177,7 @@ class airCrawlerFile:
             return -1
         c=list(filter(lambda x: x[0]==location,c[1:]))
         for l in c:
-            if l[3][-2:]!="24":
+            if l[timeStampIndex][-2:]!="24":
                 if datetime.strptime(l[timeStampIndex],'%Y%m%d%H')==timeStamp:
                     print("airVAL : %s" % l[targetIndex])
                     return l[targetIndex]
@@ -247,12 +248,15 @@ if __name__ == "__main__":
                                    "PM10","PM25","SO2","CO","O3","NO2",
                                    "기온","강수량","습도","풍속","풍향","증기압","이슬점온도","현지기압","해면기압","일조","일사","지면온도")
         keys = retList[0].keys()
-        with open('%s_db_2018.csv' % x, 'w',newline='') as output_file:
+        try :
+            output_file=open('%s_db_2018.csv' % x, 'w',newline='')
             dict_writer = csv.DictWriter(output_file, keys)
             dict_writer.writeheader()
             dict_writer.writerows(retList)
-        print("year 2018 complete")
-    access.clear_KMA_csv()
+        except Exception as e:
+            print(e)
+            output_file.close()
+    print("year 2018 complete")
 
 
 

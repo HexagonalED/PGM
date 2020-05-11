@@ -178,7 +178,7 @@ class airCrawlerFile:
         print("index of TIME : %s" % timeStampIndex)
         c=list(filter(lambda x: x[0]==location,c[1:]))
         for l in c:
-            if l[3][-2:]!="24":
+            if l[timeStampIndex][-2:]!="24":
                 print(l[timeStampIndex])
                 if datetime.strptime(l[timeStampIndex],'%Y%m%d%H')==timeStamp:
                     print("airVAL : %s" % l[targetIndex])

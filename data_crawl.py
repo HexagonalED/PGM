@@ -61,7 +61,8 @@ class dataAccess:
         for d in dirList:
             for i in l :
                 if str(i) == d[13:-22] :
-                    os.system("unzip %sKMA/%s -d %s/KMA" % (self._dataPath,d,self._dataPath))
+                    if not os.path.exists("%sKMA/%scsv" % (self._dataPath,d[:-3])):
+                        os.system("unzip %sKMA/%s -d %s/KMA" % (self._dataPath,d,self._dataPath))
 
 
 
@@ -118,9 +119,9 @@ class pvCrawlerFile:
         for l in c:
             if(l[0]==tString):
                 ret = l[targetIndex]
-                print("pvVAL : %s" % ret)
+                #print("pvVAL : %s" % ret)
                 return ret
-        print("pvVAL : -1")
+        #print("pvVAL : -1")
         return -1
 
 class airCrawlerFile:
@@ -149,7 +150,7 @@ class airCrawlerFile:
                 csvName = "%s년 %s분기.csv" % (y,quarter)
         else:
             csvName = "%s년 %s월.csv" % (y,m)
-        print("file : %s%s" % (self._path,csvName))
+
         self._f = open("%s%s" % (self._path,csvName),'r',encoding='utf-8')
         c = list(csv.reader(self._f))
         self.close()
@@ -176,16 +177,17 @@ class airCrawlerFile:
             return -1
         c=list(filter(lambda x: x[0]==location,c[1:]))
         for l in c:
-            if l[3][-2:]!="24":
+            print("time[index:%s] : %s" % (timeStampIndex,l[timeStampIndex]))
+            if l[timeStampIndex][-2:]!="24":
                 if datetime.strptime(l[timeStampIndex],'%Y%m%d%H')==timeStamp:
-                    print("airVAL : %s" % l[targetIndex])
+                    #print("airVAL : %s" % l[targetIndex])
                     return l[targetIndex]
             else:
                 formattedTime = datetime.strptime(l[timeStampIndex][:-2],'%Y%m%d')+timedelta(days=1)
                 if formattedTime==timeStamp:
-                    print("airVAL : %s" % l[targetIndex])
+                    #print("airVAL : %s" % l[targetIndex])
                     return l[targetIndex]
-        print("airVAL : -1")
+        #print("airVAL : -1")
         return -1
 
 
@@ -196,7 +198,6 @@ class kmaCrawlerFile:
     def open_csv_file_as_list(self,y,stnId):
         yearNameMap={'2013':"2013_2013_2015",'2014':"2014_2014_2015",'2015':"2015_2015_2016",'2016':"2016_2016_2017",'2017':"2017_2017_2018",'2018':"2018_2018_2019"}
         csvName="SURFACE_ASOS_%s_HR_%s.csv" % (stnId,yearNameMap[str(y)])
-        print("file : %s%s" % (self._path,csvName))
         self._f = open(self._path+csvName,'r',encoding='euc-kr')
         c = list(csv.reader(self._f))
         self.close()
@@ -221,15 +222,18 @@ class kmaCrawlerFile:
         for l in c:
             if datetime.strptime(l[1],'%Y-%m-%d %H:%M') == timeStamp:
                 ret = l[targetIndex]
-                print("KMAVAL : %s" % ret)
+                #print("KMAVAL : %s" % ret)
                 return ret
-        print("KMAVAL : -1")
+        #print("KMAVAL : -1")
         return -1
 
 
 
 
 
+
+
+if __name__ == "__main__":
 
 
 if __name__ == "__main__":
