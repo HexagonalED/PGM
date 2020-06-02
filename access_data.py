@@ -15,7 +15,7 @@ class dbAccess:
         if pvId[0]=="0":
             self._locMapKMA = 159 #부산
         elif pvId[0]=="1":
-            self._locMapKMA = 289 #경남 산청
+            self._locMapKMA = 192 #진주(경남 산청에는 일사량 측정 불가)
         elif pvId[0]=="2":
             self._locMapKMA = 112 #인천
         self._url="http://apis.data.go.kr/1360000/AsosHourlyInfoService/getWthrDataList?serviceKey="+apiId+"&dataType=JSON&dataCd=ASOS&dateCd=HR&numOfRows=24&schListCnt=24&pageNo=1&stnIds="+str(self._locMapKMA)
@@ -37,7 +37,7 @@ class dbAccess:
             else : startIndex=startIndex+1
         tIndex = startIndex
         argIndex=[]
-        print(arg)
+        #print(arg)
         for x in arg :
             if x == "일사" :
                 argIndex.append({"dic":-1,"arg":x})
@@ -49,12 +49,12 @@ class dbAccess:
                 continue
             dic={"idx":targetIndex,"arg":x}
             argIndex.append(dic)
-        print(argIndex)
+        #print(argIndex)
         for t in pandas.date_range(s,e,freq="H"):
             vals = {}
             vals["time"]=str(t)
             for dic in argIndex:
-                print(dic)
+                #print(dic)
                 if dic["arg"] == "일사":
                     #call API
                     tIlsa=datetime.strptime(str(t),"%Y-%m-%d %H:%M:%S")
@@ -62,7 +62,7 @@ class dbAccess:
                     ilsaHR = "%02d"%tIlsa.hour
                     reqUrl = self._url+"&startDt=%s&startHh=%s&endDt=%s&endHh=%s" % (ilsaYM,ilsaHR,ilsaYM,ilsaHR)
                     res = rq.get(reqUrl).json()
-                    print(reqUrl)
+                    #print(reqUrl)
                     vals[dic["arg"]]=res["response"]["body"]["items"]["item"][0]["icsr"]
                 else:
                     vals[dic["arg"]]=c[tIndex][dic["idx"]]
